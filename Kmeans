@@ -1,0 +1,19 @@
+clear; clc;
+filename = 'DataSets/Mall_Customers.csv';
+data = readtable(filename);
+genderNumeric = double(data.Gender == "Male");
+X = [genderNumeric, data.Age, data.Annual_Income, data.Spending_Score];
+k = 5;
+[idx, C] = kmeans(X, k);
+figure;
+gscatter(X(:, 3), X(:, 4), idx);
+hold on;
+plot(C(:, 3), C(:, 4), 'kX', MarkerSize=15, LineWidth=2);
+xlabel('Annual Income (k$)');
+ylabel('Spending Score (1-100)');
+title('K-Means Clustering with Gender Included');
+legend('Cluster 1', 'Cluster 2', 'Cluster 3', 'Cluster 4', 'Cluster 5', 'Centeroids')
+grid on;
+newCustomer = [1, 99, 100, 99];
+pred_cluster = knnsearch(C, newCustomer);
+fprintf('The new customer is assigned to Cluster %d.\n', pred_cluster)
